@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Famtivity - Your Family's Next Adventure Awaits</title>
+    <meta name="description" content="Discover amazing family experiences tailored to your children's interests and your family's style. Join thousands of families creating lasting memories together.">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Famtivity - Your Family's Next Adventure Awaits">
+    <meta property="og:description" content="Discover amazing family experiences tailored to your children's interests and your family's style.">
+    <meta property="og:image" content="/og-image.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <!-- Facebook SDK -->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1F2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Header */
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 24px 0;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 700;
+            font-size: 28px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: white;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1" fill="rgba(255,255,255,0.15)"/><circle cx="40" cy="80" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="90" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="1" fill="rgba(255,255,255,0.15)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        
+        .hero-description {
+            font-size: clamp(1rem, 2.5vw, 1.125rem);
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 48px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        /* Waitlist Form */
+        .waitlist-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 48px;
+            max-width: 480px;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+        
+        .form-subtitle {
+            color: #6B7280;
+            font-size: 0.95rem;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #FF6B47;
+            box-shadow: 0 0 0 3px rgba(255, 107, 71, 0.1);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #FF6B47 0%, #FF8A65 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 71, 0.4);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Social Login */
+        .social-divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            text-align: center;
+            color: #9CA3AF;
+            font-size: 0.9rem;
+        }
+        
+        .social-divider::before,
+        .social-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #E5E7EB;
+        }
+        
+        .social-divider span {
+            padding: 0 16px;
+        }
+        
+        .social-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .social-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            background: white;
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .social-btn:hover {
+            border-color: #D1D5DB;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .social-btn.google {
+            color: #4285f4;
+        }
+        
+        .social-btn.google:hover {
+            border-color: #4285f4;
+            background: #f8fbff;
+        }
+        
+        .social-btn.facebook {
+            color: #1877f2;
+        }
+        
+        .social-btn.facebook:hover {
+            border-color: #1877f2;
+            background: #f0f8ff;
+        }
+        
+        .social-icon {
+            width: 18px;
+            height: 18px;
+        }
+        
+        /* Success State with Onboarding Options */
+        .success-state {
+            text-align: center;
+            padding: 0;
+            width: 100%;
+        }
+        
+        .success-message {
+            background: #D1FAE5;
+            color: #047857;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .onboarding-options {
+            margin-top: 24px;
+        }
+        
+        .onboarding-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 16px;
+        }
+        
+        .onboarding-buttons {
+            display: flex;
+            gap: 12px;
+            flex-direction: column;
+        }
+        
+        .onboarding-btn {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            background: white;
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .onboarding-btn:hover {
+            border-color: #FF6B47;
+            background: #FFF7F5;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 107, 71, 0.15);
+        }
+        
+        .onboarding-icon {
+            width: 24px;
+            height: 24px;
+            background: #F3F4F6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .onboarding-text {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .onboarding-label {
+            font-weight: 600;
+            color: #1F2937;
+            display: block;
+        }
+        
+        .onboarding-description {
+            font-size: 0.85rem;
+            color: #6B7280;
+            margin-top: 2px;
+        }
+        
+        .skip-option {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #E5E7EB;
+        }
+        
+        .skip-btn {
+            background: none;
+            border: none;
+            color: #6B7280;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .skip-btn:hover {
+            color: #374151;
+            text-decoration: underline;
+        }
+        
+        /* Loading state */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Social Proof */
+        .social-proof {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .social-proof-content {
+            text-align: center;
+            color: white;
+        }
+        
+        .social-proof h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .social-proof p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            margin-bottom: 48px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #FFD700;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #1F2937;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .header {
+                padding: 16px 0;
+            }
+            
+            .logo {
+                font-size: 24px;
+            }
+            
+            .logo-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+            
+            .hero {
+                padding: 120px 0 60px;
+                min-height: auto;
+            }
+            
+            .hero h1 {
+                font-size: 2.25rem;
+                line-height: 1.2;
+                margin-bottom: 20px;
+            }
+            
+            .hero-description {
+                font-size: 1.125rem;
+                margin-bottom: 32px;
+                line-height: 1.6;
+            }
+            
+            .waitlist-form {
+                padding: 32px 20px;
+                margin: 0 8px;
+                border-radius: 12px;
+            }
+            
+            .form-title {
+                font-size: 1.375rem;
+            }
+            
+            .form-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            .form-group label {
+                font-size: 0.9rem;
+                margin-bottom: 6px;
+            }
+            
+            .form-group input,
+            .form-group select {
+                padding: 14px 12px;
+                font-size: 16px; /* Prevents zoom on iOS */
+                border-radius: 8px;
+            }
+            
+            .submit-btn {
+                padding: 16px;
+                font-size: 1rem;
+                border-radius: 8px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .social-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .social-btn {
+                font-size: 0.85rem;
+                padding: 10px 12px;
+            }
+            
+            .social-divider {
+                margin: 16px 0;
+            }
+            
+            .social-proof {
+                padding: 40px 0;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+                max-width: 300px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .stat-label {
+                font-size: 0.9rem;
+            }
+            
+            .footer {
+                padding: 32px 0;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+            
+            .footer-links {
+                gap: 24px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+                margin-bottom: 16px;
+            }
+            
+            .hero-description {
+                font-size: 1rem;
+                margin-bottom: 28px;
+            }
+            
+            .waitlist-form {
+                padding: 24px 16px;
+                margin: 0 4px;
+            }
+            
+            .form-header {
+                margin-bottom: 24px;
+            }
+            
+            .form-title {
+                font-size: 1.25rem;
+            }
+            
+            .form-group input,
+            .form-group select {
+                padding: 12px;
+            }
+            
+            .submit-btn {
+                padding: 14px;
+            }
+            
+            .social-proof {
+                padding: 32px 0;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">
+                    <div class="logo-icon">🎯</div>
+                    Famtivity
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#join">Join Waitlist</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Your Family's Next Adventure Awaits</h1>
+                <p class="hero-description">
+                    We help families discover amazing experiences together.
+                </p>
+                
+                <!-- Waitlist Form -->
+                <div class="waitlist-form" id="join">
+                    <div class="form-header">
+                        <h2 class="form-title">Join the Waitlist</h2>
+                        <p class="form-subtitle">Be the first to know when we launch</p>
+                    </div>
+                    
+                    <!-- Social Login Options -->
+                    <div class="social-buttons">
+                        <button type="button" class="social-btn google" onclick="signInWithGoogle()">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="social-btn facebook" onclick="signInWithFacebook()">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            Facebook
+                        </button>
+                    </div>
+                    
+                    <div class="social-divider">
+                        <span>or</span>
+                    </div>
+                    
+                    <form id="waitlistForm">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required placeholder="your@email.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" required placeholder="Sarah">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="zipCode">ZIP Code</label>
+                            <input type="text" id="zipCode" name="zipCode" required placeholder="80202">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="familySize">Number of Children</label>
+                            <select id="familySize" name="familySize" required>
+                                <option value="">Select...</option>
+                                <option value="1">1 child</option>
+                                <option value="2">2 children</option>
+                                <option value="3">3 children</option>
+                                <option value="4">4+ children</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            Join Waitlist
+                        </button>
+                    </form>
+                    
+                    <!-- Role Selection State -->
+                    <div class="success-state" id="roleSelection" style="display: none;">
+                        <div class="success-message">
+                            Welcome to Famtivity! 🎉
+                        </div>
+                        
+                        <div class="onboarding-options">
+                            <h3 class="onboarding-title">What best describes you?</h3>
+                            <p style="color: #6B7280; font-size: 0.9rem; margin-bottom: 24px;">
+                                This helps us customize your experience
+                            </p>
+                            
+                            <div class="onboarding-buttons">
+                                <button class="onboarding-btn" onclick="selectRole('family')">
+                                    <div class="onboarding-icon">👨‍👩‍👧‍👦</div>
+                                    <div class="onboarding-text">
+                                        <span class="onboarding-label">I'm a Parent/Family</span>
+                                        <div class="onboarding-description">Looking for activities and experiences for my children</div>
+                                    </div>
+                                </button>
+                                
+                                <button class="onboarding-btn" onclick="selectRole('business')">
+                                    <div class="onboarding-icon">🏢</div>
+                                    <div class="onboarding-text">
+                                        <span class="onboarding-label">I'm a Business/Provider</span>
+                                        <div class="onboarding-description">I offer activities, classes, or experiences for families</div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Family Onboarding Form -->
+                    <div class="success-state" id="familyOnboarding" style="display: none;">
+                        <div class="form-header">
+                            <h2 class="form-title">Let's build your family profile</h2>
+                            <p class="form-subtitle">This helps us find perfect activities for your children</p>
+                        </div>
+                        
+                        <form id="familyOnboardingForm">
+                            <div class="form-group">
+                                <label for="numChildren">How many children do you have?</label>
+                                <select id="numChildren" name="numChildren" required onchange="generateChildForms()">
+                                    <option value="">Select...</option>
+                                    <option value="1">1 child</option>
+                                    <option value="2">2 children</option>
+                                    <option value="3">3 children</option>
+                                    <option value="4">4 children</option>
+                                    <option value="5">5+ children</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="monthlyBudget">Monthly budget for all activities</label>
+                                <select id="monthlyBudget" name="monthlyBudget" required>
+                                    <option value="">Select budget range...</option>
+                                    <option value="0-50">$0 - $50</option>
+                                    <option value="50-100">$50 - $100</option>
+                                    <option value="100-200">$100 - $200</option>
+                                    <option value="200-500">$200 - $500</option>
+                                    <option value="500+">$500+</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="maxTravel">How far are you willing to travel?</label>
+                                <select id="maxTravel" name="maxTravel" required>
+                                    <option value="">Select...</option>
+                                    <option value="5">5 minutes</option>
+                                    <option value="10">10 minutes</option>
+                                    <option value="15">15 minutes</option>
+                                    <option value="20">20 minutes</option>
+                                    <option value="30">30+ minutes</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Dynamic child forms will be inserted here -->
+                            <div id="childrenForms"></div>
+                            
+                            <button type="submit" class="submit-btn" id="familySubmitBtn">
+                                Complete Setup
+                            </button>
+                        </form>
+                        
+                        <div class="skip-option">
+                            <button class="skip-btn" onclick="skipFamilyOnboarding()">
+                                Skip for now - I'll complete this later
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Business Onboarding Form -->
+                    <div class="success-state" id="businessOnboarding" style="display: none;">
+                        <div class="form-header">
+                            <h2 class="form-title">Tell us about your business</h2>
+                            <p class="form-subtitle">Help families discover what you offer</p>
+                        </div>
+                        
+                        <form id="businessOnboardingForm">
+                            <div class="form-group">
+                                <label for="businessName">Business/Organization Name</label>
+                                <input type="text" id="businessName" name="businessName" required placeholder="Amazing Kids Gymnastics">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="businessType">What type of activities do you offer?</label>
+                                <select id="businessType" name="businessType" required>
+                                    <option value="">Select primary category...</option>
+                                    <option value="sports">Sports & Athletics</option>
+                                    <option value="arts">Arts & Crafts</option>
+                                    <option value="music">Music & Performance</option>
+                                    <option value="education">Educational/STEM</option>
+                                    <option value="fitness">Fitness & Movement</option>
+                                    <option value="outdoor">Outdoor Activities</option>
+                                    <option value="creative">Creative Arts</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="ageRange">What age groups do you serve?</label>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    <select id="minAge" name="minAge" required>
+                                        <option value="">Min age</option>
+                                        <option value="2">2 years</option>
+                                        <option value="3">3 years</option>
+                                        <option value="4">4 years</option>
+                                        <option value="5">5 years</option>
+                                        <option value="6">6 years</option>
+                                        <option value="8">8 years</option>
+                                        <option value="10">10 years</option>
+                                        <option value="12">12 years</option>
+                                        <option value="14">14 years</option>
+                                    </select>
+                                    <select id="maxAge" name="maxAge" required>
+                                        <option value="">Max age</option>
+                                        <option value="5">5 years</option>
+                                        <option value="8">8 years</option>
+                                        <option value="10">10 years</option>
+                                        <option value="12">12 years</option>
+                                        <option value="14">14 years</option>
+                                        <option value="16">16 years</option>
+                                        <option value="18">18 years</option>
+                                        <option value="99">All ages</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="businessAddress">Business Address</label>
+                                <input type="text" id="businessAddress" name="businessAddress" required placeholder="123 Main St, Denver, CO 80202">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="website">Website (optional)</label>
+                                <input type="url" id="website" name="website" placeholder="https://yourwebsite.com">
+                            </div>
+                            
+                            <button type="submit" class="submit-btn" id="businessSubmitBtn">
+                                Complete Setup
+                            </button>
+                        </form>
+                        
+                        <div class="skip-option">
+                            <button class="skip-btn" onclick="skipBusinessOnboarding()">
+                                Skip for now - I'll complete this later
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Empty Section -->
+    <section class="social-proof">
+        <div class="container">
+            <!-- Content will be added here later -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <div class="logo-icon">🎯</div>
+                    Famtivity
+                </div>
+                
+                <ul class="footer-links">
+                    <li><a href="mailto:hello@famtivity.com">Contact</a></li>
+                    <li><a href="/privacy">Privacy</a></li>
+                    <li><a href="/terms">Terms</a></li>
+                </ul>
+                
+                <p>&copy; 2024 Famtivity. Your family's next adventure awaits.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration - Replace with your actual IDs
+        const GOOGLE_CLIENT_ID = 'your-google-client-id.googleusercontent.com';
+        const FACEBOOK_APP_ID = 'your-facebook-app-id';
+        
+        // Initialize Google Sign-In
+        function initializeGoogleSignIn() {
+            if (typeof google !== 'undefined' && google.accounts) {
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: handleGoogleSignIn,
+                    auto_select: false,
+                    cancel_on_tap_outside: true
+                });
+            }
+        }
+        
+        // Initialize Facebook SDK
+        function initializeFacebookSDK() {
+            if (typeof FB !== 'undefined') {
+                FB.init({
+                    appId: FACEBOOK_APP_ID,
+                    cookie: true,
+                    xfbml: true,
+                    version: 'v18.0'
+                });
+            }
+        }
+        
+        // Google Sign-In handler
+        function signInWithGoogle() {
+            if (typeof google !== 'undefined' && google.accounts) {
+                google.accounts.id.prompt((notification) => {
+                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                        // Fallback to direct sign-in
+                        google.accounts.id.renderButton(
+                            document.createElement('div'),
+                            { theme: 'outline', size: 'large' }
+                        );
+                    }
+                });
+            } else {
+                console.log('Google Sign-In not available');
+                showMessage('Google Sign-In is not available. Please try the email form below.', 'error');
+            }
+        }
+        
+        // Facebook Sign-In handler
+        function signInWithFacebook() {
+            if (typeof FB !== 'undefined') {
+                FB.login(function(response) {
+                    if (response.authResponse) {
+                        FB.api('/me', {fields: 'name,email'}, function(userInfo) {
+                            handleSocialSignUp({
+                                provider: 'facebook',
+                                email: userInfo.email,
+                                name: userInfo.name,
+                                id: userInfo.id
+                            });
+                        });
+                    } else {
+                        console.log('Facebook login cancelled');
+                    }
+                }, {scope: 'email'});
+            } else {
+                console.log('Facebook SDK not available');
+                showMessage('Facebook Sign-In is not available. Please try the email form below.', 'error');
+            }
+        }
+        
+        // Handle Google Sign-In response
+        function handleGoogleSignIn(response) {
+            try {
+                const payload = JSON.parse(atob(response.credential.split('.')[1]));
+                handleSocialSignUp({
+                    provider: 'google',
+                    email: payload.email,
+                    name: payload.name,
+                    id: payload.sub
+                });
+            } catch (error) {
+                console.error('Error parsing Google token:', error);
+                showMessage('Sign-in failed. Please try again.', 'error');
+            }
+        }
+        
+        // Handle social sign-up success
+        function handleSocialSignUp(userData) {
+            // Pre-fill form with social data
+            document.getElementById('email').value = userData.email;
+            document.getElementById('firstName').value = userData.name.split(' ')[0];
+            
+            // Store user data for later use
+            sessionStorage.setItem('socialUserData', JSON.stringify(userData));
+            
+            // Show role selection immediately
+            showRoleSelection();
+        }
+        
+        // Show role selection screen
+        function showRoleSelection() {
+            // Hide the initial form content
+            document.getElementById('waitlistForm').style.display = 'none';
+            document.querySelector('.social-buttons').style.display = 'none';
+            document.querySelector('.social-divider').style.display = 'none';
+            document.querySelector('.form-header').style.display = 'none';
+            
+            // Show role selection
+            document.getElementById('roleSelection').style.display = 'block';
+        }
+        
+        // Handle role selection
+        function selectRole(role) {
+            document.getElementById('roleSelection').style.display = 'none';
+            
+            if (role === 'family') {
+                document.getElementById('familyOnboarding').style.display = 'block';
+            } else if (role === 'business') {
+                document.getElementById('businessOnboarding').style.display = 'block';
+            }
+            
+            // Store the selected role
+            sessionStorage.setItem('userRole', role);
+        }
+        
+        // Generate child forms dynamically
+        function generateChildForms() {
+            const numChildren = parseInt(document.getElementById('numChildren').value);
+            const container = document.getElementById('childrenForms');
+            container.innerHTML = '';
+            
+            if (numChildren > 0) {
+                for (let i = 1; i <= numChildren; i++) {
+                    const childForm = createChildForm(i);
+                    container.appendChild(childForm);
+                }
+            }
+        }
+        
+        // Create individual child form
+        function createChildForm(childNumber) {
+            const div = document.createElement('div');
+            div.className = 'child-form';
+            div.innerHTML = `
+                <h4 style="color: #1F2937; margin: 24px 0 16px; font-size: 1.1rem;">Child ${childNumber}</h4>
+                
+                <div class="form-group">
+                    <label for="childName${childNumber}">Name (optional)</label>
+                    <input type="text" id="childName${childNumber}" name="childName${childNumber}" placeholder="Emma">
+                </div>
+                
+                <div class="form-group">
+                    <label for="childAge${childNumber}">Age</label>
+                    <select id="childAge${childNumber}" name="childAge${childNumber}" required>
+                        <option value="">Select age...</option>
+                        <option value="3">3 years old</option>
+                        <option value="4">4 years old</option>
+                        <option value="5">5 years old</option>
+                        <option value="6">6 years old</option>
+                        <option value="7">7 years old</option>
+                        <option value="8">8 years old</option>
+                        <option value="9">9 years old</option>
+                        <option value="10">10 years old</option>
+                        <option value="11">11 years old</option>
+                        <option value="12">12 years old</option>
+                        <option value="13">13 years old</option>
+                        <option value="14">14 years old</option>
+                        <option value="15">15 years old</option>
+                        <option value="16">16 years old</option>
+                        <option value="17">17 years old</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>What activities is ${childNumber > 1 ? 'this child' : 'your child'} interested in? (select all that apply)</label>
+                    <div class="interests-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 8px;">
+                        ${generateInterestCheckboxes(childNumber)}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="energyLevel${childNumber}">Energy Level</label>
+                    <select id="energyLevel${childNumber}" name="energyLevel${childNumber}" required>
+                        <option value="">Select...</option>
+                        <option value="low">Low energy - prefers calm activities</option>
+                        <option value="medium">Medium energy - enjoys variety</option>
+                        <option value="high">High energy - loves active pursuits</option>
+                    </select>
+                </div>
+            `;
+            return div;
+        }
+        
+        // Generate interest checkboxes
+        function generateInterestCheckboxes(childNumber) {
+            const interests = [
+                { id: 'sports', label: '⚽ Sports', value: 'sports' },
+                { id: 'arts', label: '🎨 Arts & Crafts', value: 'arts' },
+                { id: 'music', label: '🎵 Music', value: 'music' },
+                { id: 'dance', label: '💃 Dance', value: 'dance' },
+                { id: 'stem', label: '🔬 STEM', value: 'stem' },
+                { id: 'outdoor', label: '🌲 Outdoor', value: 'outdoor' },
+                { id: 'swimming', label: '🏊 Swimming', value: 'swimming' },
+                { id: 'martial_arts', label: '🥋 Martial Arts', value: 'martial_arts' },
+                { id: 'theater', label: '🎭 Theater', value: 'theater' },
+                { id: 'cooking', label: '👩‍🍳 Cooking', value: 'cooking' }
+            ];
+            
+            return interests.map(interest => `
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer;">
+                    <input type="checkbox" name="interests${childNumber}" value="${interest.value}" style="margin: 0;">
+                    <span>${interest.label}</span>
+                </label>
+            `).join('');
+        }
+        
+        // Show message helper
+        function showMessage(message, type = 'success') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `success-message ${type === 'error' ? 'error-message' : ''}`;
+            messageDiv.textContent = message;
+            messageDiv.style.marginBottom = '16px';
+            
+            if (type === 'error') {
+                messageDiv.style.background = '#FEE2E2';
+                messageDiv.style.color = '#DC2626';
+            }
+            
+            const form = document.getElementById('waitlistForm');
+            form.parentNode.insertBefore(messageDiv, form);
+            
+            setTimeout(() => messageDiv.remove(), 5000);
+        }
+        
+        // Skip functions
+        function skipFamilyOnboarding() {
+            window.location.href = '/app'; // Redirect to main app
+        }
+        
+        function skipBusinessOnboarding() {
+            window.location.href = '/business'; // Redirect to business dashboard
+        }
+        
+        // Family onboarding form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const familyForm = document.getElementById('familyOnboardingForm');
+            if (familyForm) {
+                familyForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = document.getElementById('familySubmitBtn');
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Setting up your profile...';
+                    
+                    try {
+                        const formData = new FormData(e.target);
+                        const data = Object.fromEntries(formData.entries());
+                        
+                        // Collect children data
+                        const numChildren = parseInt(data.numChildren);
+                        const children = [];
+                        
+                        for (let i = 1; i <= numChildren; i++) {
+                            const interests = formData.getAll(`interests${i}`);
+                            children.push({
+                                name: data[`childName${i}`] || '',
+                                age: parseInt(data[`childAge${i}`]),
+                                interests: interests,
+                                energyLevel: data[`energyLevel${i}`]
+                            });
+                        }
+                        
+                        const profileData = {
+                            userType: 'family',
+                            monthlyBudget: data.monthlyBudget,
+                            maxTravel: parseInt(data.maxTravel),
+                            children: children,
+                            timestamp: new Date().toISOString()
+                        };
+                        
+                        // Submit to your API
+                        const response = await fetch('/api/onboarding/family', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(profileData)
+                        });
+                        
+                        if (response.ok) {
+                            // Redirect to main app
+                            window.location.href = '/app';
+                        } else {
+                            throw new Error('Submission failed');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        showMessage('Something went wrong. Please try again.', 'error');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Complete Setup';
+                    }
+                });
+            }
+            
+            // Business onboarding form submission
+            const businessForm = document.getElementById('businessOnboardingForm');
+            if (businessForm) {
+                businessForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = document.getElementById('businessSubmitBtn');
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Setting up your business...';
+                    
+                    try {
+                        const formData = new FormData(e.target);
+                        const data = Object.fromEntries(formData.entries());
+                        
+                        const businessData = {
+                            userType: 'business',
+                            businessName: data.businessName,
+                            businessType: data.businessType,
+                            ageRange: {
+                                min: parseInt(data.minAge),
+                                max: parseInt(data.maxAge)
+                            },
+                            address: data.businessAddress,
+                            website: data.website,
+                            timestamp: new Date().toISOString()
+                        };
+                        
+                        // Submit to your API
+                        const response = await fetch('/api/onboarding/business', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(businessData)
+                        });
+                        
+                        if (response.ok) {
+                            // Redirect to business dashboard
+                            window.location.href = '/business';
+                        } else {
+                            throw new Error('Submission failed');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        showMessage('Something went wrong. Please try again.', 'error');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Complete Setup';
+                    }
+                });
+            }
+        });
