@@ -357,84 +357,41 @@
         }
 
         /* Activity Cards Animation */
-        .activity-cards {
+        .onboarding-flow {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .onboarding-step {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-        }
-
-        .activity-card {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            animation: slideUp 3s ease-in-out infinite;
+            animation: slideThrough 9s ease-in-out infinite;
             opacity: 0;
+            transform: translateY(50px);
         }
 
-        .activity-card:nth-child(1) { animation-delay: 0s; }
-        .activity-card:nth-child(2) { animation-delay: 1s; }
-        .activity-card:nth-child(3) { animation-delay: 2s; }
-
-        @keyframes slideUp {
+        @keyframes slideThrough {
             0% {
-                transform: translateY(50px);
                 opacity: 0;
+                transform: translateY(50px);
             }
-            20%, 80% {
-                transform: translateY(0);
+            10%, 30% {
                 opacity: 1;
+                transform: translateY(0);
+            }
+            40% {
+                opacity: 0;
+                transform: translateY(-50px);
             }
             100% {
-                transform: translateY(-50px);
                 opacity: 0;
+                transform: translateY(-50px);
             }
-        }
-
-        .activity-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-
-        .activity-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--light-gray);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .activity-info h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .activity-info p {
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-
-        .activity-tags {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .tag {
-            font-size: 0.75rem;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: var(--light-gray);
-            color: var(--gray);
         }
 
         /* Stats Section */
@@ -983,47 +940,112 @@
                     <div class="phone-mockup">
                         <div class="phone-frame">
                             <div class="phone-screen">
-                                <div class="activity-cards">
-                                    <div class="activity-card">
-                                        <div class="activity-header">
-                                            <div class="activity-icon">⚽</div>
-                                            <div class="activity-info">
-                                                <h3>Little Kickers Soccer</h3>
-                                                <p>Perfect for Emma, age 8</p>
+                                <div class="onboarding-flow">
+                                    <!-- Step 1: Family Setup -->
+                                    <div class="onboarding-step" style="animation-delay: 0s;">
+                                        <div style="padding: 24px;">
+                                            <h4 style="font-size: 1.2rem; margin-bottom: 20px; color: var(--dark);">How many children?</h4>
+                                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                                                <div style="padding: 20px; border: 2px solid #E5E7EB; border-radius: 12px; text-align: center; font-weight: 600;">1</div>
+                                                <div style="padding: 20px; border: 2px solid var(--primary); background: rgba(255, 107, 71, 0.1); border-radius: 12px; text-align: center; font-weight: 600; color: var(--primary);">2</div>
+                                                <div style="padding: 20px; border: 2px solid #E5E7EB; border-radius: 12px; text-align: center; font-weight: 600;">3+</div>
                                             </div>
-                                        </div>
-                                        <div class="activity-tags">
-                                            <span class="tag">Saturdays</span>
-                                            <span class="tag">$65/month</span>
-                                            <span class="tag">5 min away</span>
+                                            <div style="margin-top: 24px;">
+                                                <label style="font-size: 0.9rem; color: var(--gray); display: block; margin-bottom: 8px;">Monthly Budget</label>
+                                                <div style="background: var(--light-gray); padding: 16px; border-radius: 12px; text-align: center;">
+                                                    <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">$200</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="activity-card">
-                                        <div class="activity-header">
-                                            <div class="activity-icon">🎨</div>
-                                            <div class="activity-info">
-                                                <h3>Creative Arts Studio</h3>
-                                                <p>Great match for Liam, age 6</p>
+
+                                    <!-- Step 2: Child Interests -->
+                                    <div class="onboarding-step" style="animation-delay: 3s;">
+                                        <div style="padding: 24px;">
+                                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                                <div style="width: 50px; height: 50px; background: var(--gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">👧</div>
+                                                <div>
+                                                    <h4 style="font-size: 1.1rem; color: var(--dark);">Emma's Interests</h4>
+                                                    <p style="font-size: 0.85rem; color: var(--gray);">Age 8</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="activity-tags">
-                                            <span class="tag">After school</span>
-                                            <span class="tag">$45/month</span>
-                                            <span class="tag">10 min away</span>
+                                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                                                <div style="padding: 16px 8px; background: rgba(255, 107, 71, 0.1); border: 2px solid var(--primary); border-radius: 12px; text-align: center; font-size: 0.85rem;">
+                                                    <div style="font-size: 24px; margin-bottom: 4px;">⚽</div>
+                                                    Sports
+                                                </div>
+                                                <div style="padding: 16px 8px; background: var(--light-gray); border: 2px solid #E5E7EB; border-radius: 12px; text-align: center; font-size: 0.85rem;">
+                                                    <div style="font-size: 24px; margin-bottom: 4px;">🎨</div>
+                                                    Arts
+                                                </div>
+                                                <div style="padding: 16px 8px; background: rgba(255, 107, 71, 0.1); border: 2px solid var(--primary); border-radius: 12px; text-align: center; font-size: 0.85rem;">
+                                                    <div style="font-size: 24px; margin-bottom: 4px;">🎭</div>
+                                                    Drama
+                                                </div>
+                                                <div style="padding: 16px 8px; background: var(--light-gray); border: 2px solid #E5E7EB; border-radius: 12px; text-align: center; font-size: 0.85rem;">
+                                                    <div style="font-size: 24px; margin-bottom: 4px;">🎵</div>
+                                                    Music
+                                                </div>
+                                                <div style="padding: 16px 8px; background: var(--light-gray); border: 2px solid #E5E7EB; border-radius: 12px; text-align: center; font-size: 0.85rem;">
+                                                    <div style="font-size: 24px; margin-bottom: 4px;">🔬</div>
+                                                    STEM
+                                                </div>
+                                                <div style="padding: 16px 8px; background: rgba(255, 107, 71, 0.1); border: 2px solid var(--primary); border-radius: 12px; text-align: center; font-size: 0.85rem;">
+                                                    <div style="font-size: 24px; margin-bottom: 4px;">🌲</div>
+                                                    Outdoor
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="activity-card">
-                                        <div class="activity-header">
-                                            <div class="activity-icon">🏊</div>
-                                            <div class="activity-info">
-                                                <h3>Swim Academy</h3>
-                                                <p>Recommended for both kids</p>
+
+                                    <!-- Step 3: AI Recommendations -->
+                                    <div class="onboarding-step" style="animation-delay: 6s;">
+                                        <div style="padding: 24px;">
+                                            <div style="text-align: center; margin-bottom: 20px;">
+                                                <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 107, 71, 0.1); color: var(--primary); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                                                    <span>✨</span>
+                                                    <span>AI Matched Activities</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="activity-tags">
-                                            <span class="tag">Flexible times</span>
-                                            <span class="tag">$80/month</span>
-                                            <span class="tag">Indoor pool</span>
+                                            
+                                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                                <div style="background: white; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                                        <div style="width: 40px; height: 40px; background: rgba(255, 107, 71, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;">⚽</div>
+                                                        <div style="flex: 1;">
+                                                            <h5 style="font-size: 0.95rem; margin-bottom: 2px;">Soccer Stars</h5>
+                                                            <p style="font-size: 0.8rem; color: var(--gray);">Perfect for Emma • $65/mo</p>
+                                                        </div>
+                                                        <span style="background: var(--accent); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">98% Match</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div style="background: white; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                                        <div style="width: 40px; height: 40px; background: rgba(255, 107, 71, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;">🎭</div>
+                                                        <div style="flex: 1;">
+                                                            <h5 style="font-size: 0.95rem; margin-bottom: 2px;">Drama Club</h5>
+                                                            <p style="font-size: 0.8rem; color: var(--gray);">Great for Emma • $45/mo</p>
+                                                        </div>
+                                                        <span style="background: var(--accent); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">95% Match</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div style="background: white; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                                        <div style="width: 40px; height: 40px; background: rgba(74, 144, 226, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;">🏊</div>
+                                                        <div style="flex: 1;">
+                                                            <h5 style="font-size: 0.95rem; margin-bottom: 2px;">Family Swim</h5>
+                                                            <p style="font-size: 0.8rem; color: var(--gray);">All kids • $120/mo</p>
+                                                        </div>
+                                                        <span style="background: var(--secondary); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">Both Kids</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <button style="width: 100%; margin-top: 16px; padding: 14px; background: var(--gradient); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; cursor: pointer;">
+                                                View All Recommendations
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
