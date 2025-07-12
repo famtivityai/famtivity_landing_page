@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Famtivity - Start Your Family's Adventure</title>
+    <meta name="description" content="Join thousands of families discovering perfect activities. Quick setup, personalized recommendations.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <!-- Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <!-- Facebook SDK -->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B47;
+            --primary-dark: #FF5733;
+            --secondary: #4A90E2;
+            --accent: #50C878;
+            --warning: #FFD700;
+            --dark: #1A1F2E;
+            --gray: #6B7280;
+            --light-gray: #F3F4F6;
+            --white: #FFFFFF;
+            --gradient: linear-gradient(135deg, #FF6B47 0%, #FF8964 100%);
+            --shadow-lg: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            background: linear-gradient(135deg, #FFF5F3 0%, #E8F4FD 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--dark);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .back-link {
+            color: var(--gray);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .onboarding-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 480px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 4px;
+            background: var(--light-gray);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* Form Container */
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .step-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(74, 144, 226, 0.1);
+            color: var(--secondary);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 71, 0.1);
+        }
+
+        /* Social Login */
+        .social-section {
+            margin-bottom: 32px;
+        }
+
+        .social-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            background: white;
+            color: var(--dark);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #E5E7EB;
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+
+        /* Number Selector */
+        .number-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .number-option {
+            padding: 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            background: white;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .number-option:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .number-option.selected {
+            background: var(--gradient);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Budget Slider */
+        .budget-slider {
+            margin-top: 20px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--light-gray);
+            outline: none;
+            -webkit-appearance: none;
+            margin: 20px 0;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 107, 71, 0.3);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 107, 71, 0.3);
+        }
+
+        .budget-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .budget-display {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 20px 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Child Cards */
+        .child-card {
+            background: var(--light-gray);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .child-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .child-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .child-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .child-info p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Interest Grid */
+        .interest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .interest-option {
+            padding: 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            background: white;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .interest-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .interest-option.selected {
+            background: rgba(255, 107, 71, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .interest-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            flex: 1;
+            box-shadow: 0 4px 15px rgba(255, 107, 71, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 71, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--gray);
+            border: 2px solid #E5E7EB;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Success State */
+        .success-container {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(80, 200, 120, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 40px;
+            color: var(--accent);
+        }
+
+        .success-message {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        /* Loading State */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .number-selector {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .social-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Hidden by default */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🎯</div>
+                Famtivity
+            </a>
+            <a href="index.html" class="back-link">
+                <span>←</span>
+                Back to Home
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="onboarding-container">
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 20%"></div>
+            </div>
+
+            <!-- Step 1: Initial Signup -->
+            <div id="step1" class="form-container">
+                <div class="form-header">
+                    <div class="step-indicator">
+                        <span>Step 1 of 5</span>
+                    </div>
+                    <h1>Join the Famtivity Family</h1>
+                    <p class="subtitle">Let's start with the basics. Takes less than 5 minutes!</p>
+                </div>
+
+                <!-- Social Login -->
+                <div class="social-section">
+                    <div class="social-buttons">
+                        <button class="social-btn" onclick="signInWithGoogle()">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Continue with Google
+                        </button>
+                        <button class="social-btn" onclick="signInWithFacebook()">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            Continue with Facebook
+                        </button>
+                    </div>
+
+                    <div class="divider">
+                        <span>or sign up with email</span>
+                    </div>
+                </div>
+
+                <!-- Email Form -->
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required placeholder="Sarah">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="sarah@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="zipCode">ZIP Code</label>
+                        <input type="text" id="zipCode" name="zipCode" required placeholder="80202" maxlength="5">
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="submit" class="btn btn-primary">
+                            Continue
+                            <span>→</span>
+                        </button>
+                    </div>
+                </form>
+
+                <p style="text-align: center; margin-top: 24px; font-size: 14px; color: var(--gray);">
+                    Already have an account? <a href="#" style="color: var(--primary); text-decoration: none;">Sign in</a>
+                </p>
+            </div>
+
+            <!-- Step 2: Family Size -->
+            <div id="step2" class="form-container hidden">
+                <div class="form-header">
+                    <div class="step-indicator">
+                        <span>Step 2 of 5</span>
+                    </div>
+                    <h1>How many children do you have?</h1>
+                    <p class="subtitle">We'll customize recommendations for each child's unique interests and age.</p>
+                </div>
+
+                <div class="number-selector">
+                    <div class="number-option" data-value="1">1</div>
+                    <div class="number-option" data-value="2">2</div>
+                    <div class="number-option" data-value="3">3</div>
+                    <div class="number-option" data-value="4">4</div>
+                    <div class="number-option" data-value="5">5+</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="previousStep()">
+                        <span>←</span>
+                        Back
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep()" disabled id="step2Continue">
+                        Continue
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Budget -->
+            <div id="step3" class="form-container hidden">
+                <div class="form-header">
+                    <div class="step-indicator">
+                        <span>Step 3 of 5</span>
+                    </div>
+                    <h1>What's your monthly activity budget?</h1>
+                    <p class="subtitle">We'll find amazing activities that fit your budget across all your kids.</p>
+                </div>
+
+                <div class="budget-slider">
+                    <div class="budget-display" id="budgetDisplay">$200</div>
+                    <input type="range" class="slider" id="budgetSlider" min="0" max="1000" value="200" step="50">
+                    <div class="budget-labels">
+                        <span>$0</span>
+                        <span>$500</span>
+                        <span>$1000+</span>
+                    </div>
+                </div>
+
+                <p style="text-align: center; margin-top: 24px; color: var(--gray); font-size: 14px;">
+                    You can always adjust this later
+                </p>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="previousStep()">
+                        <span>←</span>
+                        Back
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep()">
+                        Continue
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4: Children Details -->
+            <div id="step4" class="form-container hidden">
+                <div class="form-header">
+                    <div class="step-indicator">
+                        <span>Step 4 of 5</span>
+                    </div>
+                    <h1>Tell us about your children</h1>
+                    <p class="subtitle">Quick details help us find perfect activity matches.</p>
+                </div>
+
+                <div id="childrenForms">
+                    <!-- Dynamic child forms will be inserted here -->
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="previousStep()">
+                        <span>←</span>
+                        Back
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep()">
+                        Continue
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 5: Preferences -->
+            <div id="step5" class="form-container hidden">
+                <div class="form-header">
+                    <div class="step-indicator">
+                        <span>Step 5 of 5</span>
+                    </div>
+                    <h1>Final preferences</h1>
+                    <p class="subtitle">Help us understand your family's logistics.</p>
+                </div>
+
+                <form id="preferencesForm">
+                    <div class="form-group">
+                        <label for="maxTravel">How far are you willing to travel for activities?</label>
+                        <select id="maxTravel" name="maxTravel" required>
+                            <option value="">Select distance...</option>
+                            <option value="5">5 minutes</option>
+                            <option value="10">10 minutes</option>
+                            <option value="15">15 minutes</option>
+                            <option value="20">20 minutes</option>
+                            <option value="30">30+ minutes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Preferred activity times (select all that apply)</label>
+                        <div class="interest-grid">
+                            <div class="interest-option" data-time="weekday-morning">
+                                <div class="interest-icon">🌅</div>
+                                <div>Weekday AM</div>
+                            </div>
+                            <div class="interest-option" data-time="after-school">
+                                <div class="interest-icon">🏫</div>
+                                <div>After School</div>
+                            </div>
+                            <div class="interest-option" data-time="weekday-evening">
+                                <div class="interest-icon">🌙</div>
+                                <div>Weekday PM</div>
+                            </div>
+                            <div class="interest-option" data-time="saturday-am">
+                                <div class="interest-icon">☀️</div>
+                                <div>Saturday AM</div>
+                            </div>
+                            <div class="interest-option" data-time="saturday-pm">
+                                <div class="interest-icon">🌤️</div>
+                                <div>Saturday PM</div>
+                            </div>
+                            <div class="interest-option" data-time="sunday">
+                                <div class="interest-icon">🌈</div>
+                                <div>Sunday</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="previousStep()">
+                            <span>←</span>
+                            Back
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="completeBtn">
+                            Complete Setup
+                            <span class="loading-spinner hidden"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Success State -->
+            <div id="successState" class="success-container hidden">
+                <div class="success-icon">✓</div>
+                <h1 class="success-message">Welcome to Famtivity!</h1>
+                <p class="subtitle">You're all set! We're preparing personalized recommendations for your family.</p>
+                
+                <div style="margin-top: 40px;">
+                    <a href="index.html" class="btn btn-primary">
+                        Go to Dashboard
+                        <span>→</span>
+                    </a>
+                </div>
+
+                <p style="margin-top: 24px; font-size: 14px; color: var(--gray);">
+                    You'll receive an email with your login details shortly.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://your-project-id.supabase.co';
+        const SUPABASE_ANON_KEY = 'your-anon-key-here';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // State management
+        let currentStep = 1;
+        const totalSteps = 5;
+        let formData = {
+            firstName: '',
+            email: '',
+            zipCode: '',
+            numberOfChildren: 0,
+            monthlyBudget: 200,
+            children: [],
+            maxTravelDistance: '',
+            preferredTimes: []
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEventListeners();
+            updateProgressBar();
+        });
+
+        function initializeEventListeners() {
+            // Step 1 form
+            document.getElementById('signupForm').addEventListener('submit', handleSignup);
+
+            // Step 2 number selection
+            document.querySelectorAll('.number-option').forEach(option => {
+                option.addEventListener('click', handleNumberSelection);
+            });
+
+            // Step 3 budget slider
+            const budgetSlider = document.getElementById('budgetSlider');
+            budgetSlider.addEventListener('input', handleBudgetChange);
+
+            // Step 5 preferences form
+            document.getElementById('preferencesForm').addEventListener('submit', handleComplete);
+
+            // Time preference selection
+            document.querySelectorAll('[data-time]').forEach(option => {
+                option.addEventListener('click', handleTimeSelection);
+            });
+        }
+
+        // Navigation functions
+        function showStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('[id^="step"], #successState').forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            // Show current step
+            const currentStepEl = document.getElementById(`step${stepNumber}`);
+            if (currentStepEl) {
+                currentStepEl.classList.remove('hidden');
+                currentStepEl.classList.add('fade-in');
+            }
+
+            currentStep = stepNumber;
+            updateProgressBar();
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                // Special handling for step 4 - generate child forms
+                if (currentStep === 3) {
+                    generateChildForms();
+                }
+                showStep(currentStep + 1);
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                showStep(currentStep - 1);
+            }
+        }
+
+        function updateProgressBar() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        // Step 1: Signup
+        async function handleSignup(e) {
+            e.preventDefault();
+            
+            formData.firstName = document.getElementById('firstName').value;
+            formData.email = document.getElementById('email').value;
+            formData.zipCode = document.getElementById('zipCode').value;
+
+            // Here you would normally create the user in Supabase
+            // For now, just move to next step
+            nextStep();
+        }
+
+        // Step 2: Number selection
+        function handleNumberSelection(e) {
+            // Remove previous selection
+            document.querySelectorAll('.number-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // Add selection
+            e.currentTarget.classList.add('selected');
+            formData.numberOfChildren = parseInt(e.currentTarget.dataset.value);
+
+            // Enable continue button
+            document.getElementById('step2Continue').disabled = false;
+        }
+
+        // Step 3: Budget
+        function handleBudgetChange(e) {
+            const value = e.target.value;
+            formData.monthlyBudget = parseInt(value);
+            document.getElementById('budgetDisplay').textContent = value === '1000' ? '$1000+' : `${value}`;
+        }
+
+        // Step 4: Generate child forms
+        function generateChildForms() {
+            const container = document.getElementById('childrenForms');
+            container.innerHTML = '';
+
+            for (let i = 0; i < formData.numberOfChildren; i++) {
+                const childNumber = i + 1;
+                const childForm = document.createElement('div');
+                childForm.className = 'child-card';
+                childForm.innerHTML = `
+                    <div class="child-header">
+                        <div class="child-avatar">${getChildEmoji(childNumber)}</div>
+                        <div class="child-info">
+                            <h3>Child ${childNumber}</h3>
+                            <p>Tell us a bit about them</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="childName${childNumber}">Name (optional)</label>
+                        <input type="text" id="childName${childNumber}" placeholder="Emma">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="childAge${childNumber}">Age</label>
+                        <select id="childAge${childNumber}" required>
+                            <option value="">Select age...</option>
+                            ${generateAgeOptions()}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Interests (select all that apply)</label>
+                        <div class="interest-grid" id="interests${childNumber}">
+                            <div class="interest-option" data-interest="sports">
+                                <div class="interest-icon">⚽</div>
+                                <div>Sports</div>
+                            </div>
+                            <div class="interest-option" data-interest="arts">
+                                <div class="interest-icon">🎨</div>
+                                <div>Arts</div>
+                            </div>
+                            <div class="interest-option" data-interest="music">
+                                <div class="interest-icon">🎵</div>
+                                <div>Music</div>
+                            </div>
+                            <div class="interest-option" data-interest="stem">
+                                <div class="interest-icon">🔬</div>
+                                <div>STEM</div>
+                            </div>
+                            <div class="interest-option" data-interest="dance">
+                                <div class="interest-icon">💃</div>
+                                <div>Dance</div>
+                            </div>
+                            <div class="interest-option" data-interest="outdoor">
+                                <div class="interest-icon">🌲</div>
+                                <div>Outdoor</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(childForm);
+
+                // Add event listeners for interest selection
+                childForm.querySelectorAll('[data-interest]').forEach(option => {
+                    option.addEventListener('click', function() {
+                        this.classList.toggle('selected');
+                    });
+                });
+            }
+
+            // Initialize children array
+            formData.children = Array(formData.numberOfChildren).fill(null).map(() => ({
+                name: '',
+                age: null,
+                interests: []
+            }));
+        }
+
+        // Step 5: Time selection
+        function handleTimeSelection(e) {
+            e.currentTarget.classList.toggle('selected');
+            const time = e.currentTarget.dataset.time;
+            
+            if (e.currentTarget.classList.contains('selected')) {
+                formData.preferredTimes.push(time);
+            } else {
+                formData.preferredTimes = formData.preferredTimes.filter(t => t !== time);
+            }
+        }
+
+        // Complete setup
+        async function handleComplete(e) {
+            e.preventDefault();
+
+            // Collect final data
+            formData.maxTravelDistance = document.getElementById('maxTravel').value;
+
+            // Collect children data
+            for (let i = 0; i < formData.numberOfChildren; i++) {
+                const childNumber = i + 1;
+                formData.children[i] = {
+                    name: document.getElementById(`childName${childNumber}`)?.value || '',
+                    age: parseInt(document.getElementById(`childAge${childNumber}`)?.value) || null,
+                    interests: Array.from(document.querySelectorAll(`#interests${childNumber} .selected`))
+                        .map(el => el.dataset.interest)
+                };
+            }
+
+            // Show loading
+            const btn = document.getElementById('completeBtn');
+            btn.querySelector('.loading-spinner').classList.remove('hidden');
+            btn.disabled = true;
+
+            try {
+                // Save to Supabase
+                await saveToSupabase(formData);
+
+                // Show success
+                document.getElementById('step5').classList.add('hidden');
+                document.getElementById('successState').classList.remove('hidden');
+                document.getElementById('progressBar').style.width = '100%';
+            } catch (error) {
+                console.error('Error saving data:', error);
+                alert('Something went wrong. Please try again.');
+            } finally {
+                btn.querySelector('.loading-spinner').classList.add('hidden');
+                btn.disabled = false;
+            }
+        }
+
+        // Helper functions
+        function getChildEmoji(number) {
+            const emojis = ['👶', '👧', '👦', '🧒', '👶'];
+            return emojis[(number - 1) % emojis.length];
+        }
+
+        function generateAgeOptions() {
+            let options = '';
+            for (let age = 3; age <= 17; age++) {
+                options += `<option value="${age}">${age} years old</option>`;
+            }
+            return options;
+        }
+
+        async function saveToSupabase(data) {
+            // First, create the waitlist entry
+            const { data: waitlistEntry, error: waitlistError } = await supabase
+                .from('waitlist')
+                .insert([{
+                    email: data.email,
+                    first_name: data.firstName,
+                    zip_code: data.zipCode,
+                    family_size: data.numberOfChildren,
+                    source: 'website',
+                    user_role: 'family',
+                    completed_onboarding: true
+                }])
+                .select()
+                .single();
+
+            if (waitlistError) throw waitlistError;
+
+            // Create family profile
+            const { data: familyProfile, error: familyError } = await supabase
+                .from('family_profiles')
+                .insert([{
+                    waitlist_id: waitlistEntry.id,
+                    monthly_budget: data.monthlyBudget,
+                    max_travel_distance: parseInt(data.maxTravelDistance),
+                    preferred_times: data.preferredTimes
+                }])
+                .select()
+                .single();
+
+            if (familyError) throw familyError;
+
+            // Create children profiles
+            const childrenData = data.children.map(child => ({
+                family_id: familyProfile.id,
+                name: child.name || null,
+                age: child.age,
+                interests: child.interests
+            }));
+
+            const { error: childrenError } = await supabase
+                .from('children')
+                .insert(childrenData);
+
+            if (childrenError) throw childrenError;
+
+            return { waitlistEntry, familyProfile };
+        }
+
+        // Social login functions
+        function signInWithGoogle() {
+            // Implement Google Sign-In
+            console.log('Google sign-in clicked');
+            alert('Google sign-in integration coming soon!');
+        }
+
+        function signInWithFacebook() {
+            // Implement Facebook Sign-In
+            console.log('Facebook sign-in clicked');
+            alert('Facebook sign-in integration coming soon!');
+        }
+    </script>
+</body>
+</html>
